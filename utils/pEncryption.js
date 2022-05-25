@@ -1,13 +1,11 @@
-const bcrypt = require('bcryptjs');
+const Cryptr = require('cryptr');
+require('dotenv').config();
+const cryptr = new Cryptr(process.env.CRYPTR_SECRET);
 
 module.exports.encryptPass = async password => {
-  return await bcrypt.hash(password, 10);
+  return await cryptr.encrypt(password);
 };
 
-module.exports.decryptPass = async (password, hash) => {
-  try {
-    return await bcrypt.compare(password, hash);
-  } catch (e) {
-    return false;
-  }
+module.exports.decryptPass = async hash => {
+  return await cryptr.encrypt(hash);
 };

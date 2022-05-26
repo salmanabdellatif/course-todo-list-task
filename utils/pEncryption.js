@@ -7,5 +7,5 @@ module.exports.encryptPass = async password => {
 };
 
 module.exports.decryptPass = async hash => {
-  return await cryptr.encrypt(hash);
+  return await cryptr.decrypt(hash);
 };

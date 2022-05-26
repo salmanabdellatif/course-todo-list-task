@@ -1,0 +1,55 @@
+@url = http://localhost:3000
+@token1 = eyJhbGciOiJIUzI1NiJ9.MQ.RIvgofw8Gxl1wx5AOlrQKWz_Z08pxjjOxdX5Gd4I-qI
+@token2 = eyJhbGciOiJIUzI1NiJ9.Mg.rr2AU7umjQ4lL3YlPHX6K8XY3aDfNwJjrI5qQ7zC9sk
+
+@id = 1
+
+### Rrgister
+POST {{url}}/users/register
+content-type: application/json
+
+{"username":"salmanMo2", "password":"Sa123456!", "name":"salman", "birth":"2019-05-01"}
+
+
+### login
+POST {{url}}/users/login
+content-type: application/json
+# token: {{token}}
+
+{"username":"salmanMo2","password":"Sa123456!"}
+
+
+### profile
+GET {{url}}/users/me
+token: {{token2}}
+
+
+### create todo
+POST {{url}}/todo
+Content-Type: application/json
+token: {{token1}}
+
+{"title": "todo title", "content":"todo content"}
+
+
+### update todo
+PUT  {{url}}/todo/{{id}}
+Content-Type: application/json
+token: {{token2}}
+
+{"title": "todo title", "content":"post one-edit-"}
+
+
+### delete todo
+DELETE {{url}}/todo//{{id}}
+token: {{token1}}
+
+
+### get my todo list
+GET {{url}}/todo
+token: {{token1}}
+
+
+### mark todo as complete
+GET {{url}}/todo/{{id}}
+token: {{token2}}

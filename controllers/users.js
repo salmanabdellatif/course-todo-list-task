@@ -1,7 +1,7 @@
 const { resolveToken } = require('../utils/tokenMiddleware.js');
 const { getSessionToken } = require('../utils/jwt');
 const { encryptPass, decryptPass } = require('../utils/pEncryption.js');
-const { body, check, validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 const SQL = require('sql-template-strings');
 
 module.exports = (app, db) => {
@@ -27,9 +27,11 @@ module.exports = (app, db) => {
       }
       const {
         rows: [checkUser],
-      } = await db.query(SQL`SELECT * FROM users WHERE username = ${username}`);
+      } = await db.query(
+        SQL`SELECT * FROM users WHERE username = ${username};`
+      );
       if (checkUser) {
-        return res.status(500).json({ msg: 'try another username' });
+        return res.status(401).json({ msg: 'try another username' });
       }
 
       const hash = await encryptPass(password);
@@ -38,7 +40,7 @@ module.exports = (app, db) => {
       } = await db.query(
         SQL`INSERT INTO users (name ,username, password, birth) VALUES (${name}, ${username}, ${hash}, ${birth}) RETURNING id;`
       );
-      const token = getSessionToken({ id: user.id });
+      const token = getSessionToken(user.id);
       res.json({ id: user.id, token });
     }
   );
@@ -47,14 +49,15 @@ module.exports = (app, db) => {
     const { username, password } = req.body;
     const {
       rows: [user],
-    } = await db.query(SQL`SELECT * from users where username =${username}`);
+    } = await db.query(SQL`SELECT * from users WHERE username =${username}`);
     if (!user)
       return res.status(403).json({ error: { msg: 'user not found' } });
     const decrypt = await decryptPass(user.password);
     if (decrypt != password) {
       return res.status(403).json({ error: { msg: 'wrong password' } });
     }
-    user.token = getSessionToken({ id: user.id });
+    user.token = getSessionToken(user.id);
+    user.password = '*******';
     res.json(user);
   });
 

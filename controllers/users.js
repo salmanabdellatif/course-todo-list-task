@@ -3,6 +3,7 @@ const { getSessionToken } = require('../utils/jwt');
 const { encryptPass, decryptPass } = require('../utils/pEncryption.js');
 const { body, validationResult } = require('express-validator');
 const SQL = require('sql-template-strings');
+const { query } = require('express');
 
 module.exports = (app, db) => {
   app.post(
@@ -58,7 +59,10 @@ module.exports = (app, db) => {
     }
     user.token = getSessionToken(user.id);
     user.password = '*******';
-    res.json(user);
+    const todos = await db.query(
+      SQL`SELECT * FROM todos WHERE token = ${user.token};`
+    );
+    res.json({ user: user, todos: todos.rows });
   });
 
   app.get('/me', resolveToken(db), async (req, res) => {

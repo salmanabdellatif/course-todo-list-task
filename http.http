@@ -14,9 +14,8 @@ content-type: application/json
 ### login
 POST {{url}}/users/login
 content-type: application/json
-# token: {{token}}
 
-{"username":"salmanMo2","password":"Sa123456!"}
+{"username":"salmanMo","password":"Sa123456!"}
 
 
 ### profile
@@ -47,7 +46,7 @@ token: {{token1}}
 
 ### get my todo list
 GET {{url}}/todo
-token: {{token1}}
+token: {{token2}}
 
 
 ### mark todo as complete
